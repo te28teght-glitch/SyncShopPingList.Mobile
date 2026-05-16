@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace SyncChat.Mobile
+namespace SyncShoppingList.Mobile
 {
     public class ChatService
     {

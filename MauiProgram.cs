@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace ShoppingList.Mobile;
+namespace SyncShoppingList.Mobile;
 
 public static class MauiProgram
 {

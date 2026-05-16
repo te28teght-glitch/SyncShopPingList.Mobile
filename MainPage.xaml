@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ShoppingList.Mobile.MainPage"
+             x:Class="SyncShoppingList.Mobile.MainPage"
              Title="Список покупок"
              BackgroundColor="#1E1E1E">
 
     <Grid RowDefinitions="Auto,*,Auto">
         
-        <Label Grid.Row="0" Text="🛒 Список покупок 🛒" 
+        <Label Grid.Row="0" Text="🛒 Список покупок" 
                FontSize="22" 
                FontAttributes="Bold"
                HorizontalOptions="Center" 
@@ -16,60 +16,39 @@
 
         <CollectionView Grid.Row="1" 
                         x:Name="ProductsList" 
-                        Margin="10,0"
-                        VerticalScrollBarVisibility="Never">
+                        Margin="10,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,3"
-                          ColumnDefinitions="Auto,*,Auto">
-                        
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,3">
                         <CheckBox Grid.Column="0"
                                   IsChecked="{Binding IsPurchased}"
-                                  HorizontalOptions="Start"
-                                  VerticalOptions="Center"/>
-                        
+                                  HorizontalOptions="Start"/>
                         <Label Grid.Column="1" 
                                Text="{Binding Name}" 
                                TextColor="#FFFFFF" 
                                FontSize="16"
-                               VerticalOptions="Center"
                                Margin="10,0"/>
-                        
                         <Button Grid.Column="2" 
                                 Text="🗑️" 
                                 BackgroundColor="Transparent" 
                                 TextColor="#FF4444"
                                 Clicked="OnDeleteClicked"
-                                CommandParameter="{Binding Id}"
-                                WidthRequest="50"/>
+                                CommandParameter="{Binding Id}"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Grid Grid.Row="2" 
-              ColumnDefinitions="*,Auto" 
-              Margin="10,5,10,15"
-              BackgroundColor="#2D2D2D"
-              ColumnSpacing="8">
-            
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="10">
             <Entry x:Name="ProductEntry" 
                    Placeholder="Новый продукт..." 
-                   PlaceholderColor="#888888"
                    TextColor="#FFFFFF"
-                   BackgroundColor="#3A3A3A"
-                   FontSize="15"
-                   MinimumHeightRequest="40"
-                   VerticalOptions="Center"/>
-            
+                   BackgroundColor="#3A3A3A"/>
             <Button Grid.Column="1" 
                     Text="➕"
-                    TextColor="#FFFFFF"
                     BackgroundColor="#2E4A7A"
-                    WidthRequest="50"
-                    HeightRequest="40"
-                    Clicked="OnAddClicked"
-                    VerticalOptions="Center"/>
+                    TextColor="#FFFFFF"
+                    Clicked="OnAddClicked"/>
         </Grid>
         
     </Grid>

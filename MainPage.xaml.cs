@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using ShoppingList.Mobile.Models;
+using SyncShoppingList.Mobile.Models;
 
-namespace ShoppingList.Mobile;
+namespace SyncShoppingList.Mobile;
 
 public partial class MainPage : ContentPage
 {
@@ -9,7 +9,6 @@ public partial class MainPage : ContentPage
     private ObservableCollection<Product> _products;
     private string _nickname;
     private int _groupId;
-    private bool _isReceiving;
 
     public MainPage(ChatService chatService, string nickname, int groupId)
     {
@@ -22,9 +21,6 @@ public partial class MainPage : ContentPage
         ProductsList.ItemsSource = _products;
         
         LoadProducts();
-        
-        // Запускаем приём обновлений
-        _ = Task.Run(ReceiveUpdates);
     }
 
     private async void LoadProducts()
@@ -34,20 +30,19 @@ public partial class MainPage : ContentPage
         
         if (response.StartsWith("PRODUCTS|"))
         {
-            string productsData = response.Substring(9);
-            if (!string.IsNullOrEmpty(productsData))
+            string data = response.Substring(9);
+            if (!string.IsNullOrEmpty(data))
             {
-                var items = productsData.Split(';');
+                var items = data.Split(';');
                 foreach (var item in items)
                 {
                     var parts = item.Split('|');
-                    var product = new Product
+                    _products.Add(new Product
                     {
                         Name = parts[0],
                         IsPurchased = bool.Parse(parts[1]),
                         AddedBy = parts[2]
-                    };
-                    _products.Add(product);
+                    });
                 }
             }
         }
@@ -55,47 +50,22 @@ public partial class MainPage : ContentPage
 
     private async void OnAddClicked(object sender, EventArgs e)
     {
-        string productName = ProductEntry.Text;
-        if (string.IsNullOrWhiteSpace(productName)) return;
+        if (string.IsNullOrWhiteSpace(ProductEntry.Text)) return;
         
-        await _chatService.SendMessageAsync($"ADD_PRODUCT|{_groupId}|{productName}|{_nickname}");
+        await _chatService.SendMessageAsync($"ADD_PRODUCT|{_groupId}|{ProductEntry.Text}|{_nickname}");
         string response = await _chatService.ReceiveMessageAsync();
         
         if (response.StartsWith("PRODUCT_ADDED|"))
         {
-            var newProduct = new Product
-            {
-                Name = productName,
-                IsPurchased = false,
-                AddedBy = _nickname
-            };
-            _products.Add(newProduct);
+            _products.Add(new Product { Name = ProductEntry.Text, IsPurchased = false, AddedBy = _nickname });
             ProductEntry.Text = "";
         }
     }
 
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
-        var button = (Button)sender;
-        int productId = (int)button.CommandParameter;
-        
-        await _chatService.SendMessageAsync($"DELETE_PRODUCT|{productId}");
-        // TODO: получить ответ и удалить из списка
-    }
-
-    private async Task ReceiveUpdates()
-    {
-        while (true)
-        {
-            try
-            {
-                string message = await _chatService.ReceiveMessageAsync();
-                // TODO: обрабатывать обновления от сервера
-            }
-            catch
-            {
-                break;
-            }
-        }
+        var btn = (Button)sender;
+        int id = (int)btn.CommandParameter;
+        await _chatService.SendMessageAsync($"DELETE_PRODUCT|{id}");
     }
 }

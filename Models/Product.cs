@@ -1,4 +1,4 @@
-namespace ShoppingList.Mobile.Models
+namespace SyncShoppingList.Mobile.Models
 {
     public class Product
     {

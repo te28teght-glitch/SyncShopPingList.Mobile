@@ -1,4 +1,4 @@
-﻿namespace ShoppingList.Mobile;
+﻿namespace SyncShoppingList.Mobile;
 
 public partial class App : Application
 {
