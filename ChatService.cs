@@ -37,7 +37,7 @@ namespace SyncChat.Mobile
         {
             if (!_isConnected || _stream == null) return "";
             
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
             return Encoding.UTF8.GetString(buffer, 0, bytesRead);
         }
