@@ -1,16 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace ShoppingList.Mobile;
+﻿namespace ShoppingList.Mobile;
 
 public partial class App : Application
 {
-	public App()
-	{
-		InitializeComponent();
-	}
-
-	protected override Window CreateWindow(IActivationState? activationState)
-	{
-		return new Window(new AppShell());
-	}
+    public App()
+    {
+        InitializeComponent();
+        MainPage = new NavigationPage(new SettingsPage());
+    }
 }
