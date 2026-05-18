@@ -68,4 +68,8 @@ public partial class MainPage : ContentPage
         int id = (int)btn.CommandParameter;
         await _chatService.SendMessageAsync($"DELETE_PRODUCT|{id}");
     }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+    }
 }

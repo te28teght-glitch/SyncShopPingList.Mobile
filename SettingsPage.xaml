@@ -7,16 +7,14 @@
 
     <VerticalStackLayout Spacing="15" Margin="20" VerticalOptions="Center">
         
-        <Label Text="✨ Создать группу ✨" TextColor="#FFFFFF" FontSize="18" FontAttributes="Bold"/>
-        <Entry x:Name="CreateNickEntry" Placeholder="Ваше имя" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
+        <Label Text="Тестовый экран" TextColor="#FFFFFF" FontSize="24" HorizontalOptions="Center"/>
+        
+        <Entry x:Name="CreateNickEntry" Placeholder="Имя" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
         <Entry x:Name="CreateGroupNameEntry" Placeholder="Название группы" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
-        <Button Text="Создать" Clicked="OnCreateGroupClicked" BackgroundColor="#2E4A7A" TextColor="#FFFFFF"/>
+        <Button Text="Создать группу" Clicked="OnCreateGroupClicked" BackgroundColor="#2E4A7A" TextColor="#FFFFFF"/>
         
-        <BoxView HeightRequest="2" BackgroundColor="#3A3A3A" Margin="0,20"/>
-        
-        <Label Text="🔗 Присоединиться 🔗" TextColor="#FFFFFF" FontSize="18" FontAttributes="Bold"/>
-        <Entry x:Name="JoinNickEntry" Placeholder="Ваше имя" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
-        <Entry x:Name="JoinCodeEntry" Placeholder="Код приглашения" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
+        <Entry x:Name="JoinNickEntry" Placeholder="Имя" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
+        <Entry x:Name="JoinCodeEntry" Placeholder="Код" TextColor="#FFFFFF" BackgroundColor="#3A3A3A"/>
         <Button Text="Присоединиться" Clicked="OnJoinGroupClicked" BackgroundColor="#2E4A7A" TextColor="#FFFFFF"/>
         
     </VerticalStackLayout>
