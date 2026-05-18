@@ -8,68 +8,76 @@ public partial class MainPage : ContentPage
     private ChatService _chatService;
     private ObservableCollection<Product> _products;
     private string _nickname;
-    private int _groupId;
+    private int _groupId = 0;
 
-    public MainPage(ChatService chatService, string nickname, int groupId)
+    public MainPage(ChatService chatService, string nickname)
     {
         InitializeComponent();
         
         _chatService = chatService;
         _nickname = nickname;
-        _groupId = groupId;
         _products = new ObservableCollection<Product>();
         ProductsList.ItemsSource = _products;
         
-        LoadProducts();
+        this.FadeTo(1, 500);
+        
+        _ = LoadProducts();
     }
 
-    private async void LoadProducts()
+    private async Task LoadProducts()
     {
         await _chatService.SendMessageAsync($"GET_PRODUCTS|{_groupId}");
         string response = await _chatService.ReceiveMessageAsync();
         
         if (response.StartsWith("PRODUCTS|"))
         {
-            string data = response.Substring(9);
-            if (!string.IsNullOrEmpty(data))
+            _products.Clear();
+            string productsData = response.Substring(9);
+            if (!string.IsNullOrEmpty(productsData))
             {
-                var items = data.Split(';');
+                var items = productsData.Split(';');
                 foreach (var item in items)
                 {
                     var parts = item.Split('|');
                     _products.Add(new Product
                     {
-                        Name = parts[0],
-                        IsPurchased = bool.Parse(parts[1]),
-                        AddedBy = parts[2]
+                        Id = int.Parse(parts[0]),
+                        Name = parts[1],
+                        IsPurchased = bool.Parse(parts[2]),
+                        AddedBy = parts[3]
                     });
                 }
             }
         }
     }
 
-    private async void OnAddClicked(object sender, EventArgs e)
+    private async void OnAddProductClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(ProductEntry.Text)) return;
+        string productName = await DisplayPromptAsync("Новый продукт", "Введите название:", keyboard: Keyboard.Text);
         
-        await _chatService.SendMessageAsync($"ADD_PRODUCT|{_groupId}|{ProductEntry.Text}|{_nickname}");
-        string response = await _chatService.ReceiveMessageAsync();
-        
-        if (response.StartsWith("PRODUCT_ADDED|"))
+        if (!string.IsNullOrWhiteSpace(productName))
         {
-            _products.Add(new Product { Name = ProductEntry.Text, IsPurchased = false, AddedBy = _nickname });
-            ProductEntry.Text = "";
+            await _chatService.SendMessageAsync($"ADD_PRODUCT|{_groupId}|{productName}|{_nickname}");
+            string response = await _chatService.ReceiveMessageAsync();
+            
+            if (response.StartsWith("PRODUCT_ADDED|"))
+            {
+                await LoadProducts();
+            }
         }
     }
 
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
-        var btn = (Button)sender;
-        int id = (int)btn.CommandParameter;
-        await _chatService.SendMessageAsync($"DELETE_PRODUCT|{id}");
-    }
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
+        var button = (Button)sender;
+        var product = button.BindingContext as Product;
+        if (product == null) return;
+        
+        bool confirm = await DisplayAlert("Удаление", $"Удалить \"{product.Name}\"?", "Да", "Нет");
+        if (confirm)
+        {
+            await _chatService.SendMessageAsync($"DELETE_PRODUCT|{product.Id}");
+            await LoadProducts();
+        }
     }
 }
